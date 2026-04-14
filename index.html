@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Yordanow.site | Изработка на модерни Уеб Сайтове & Дизайн</title>
+    <meta name="description" content="Професионална разработка на бързи, модерни и мобилно-оптимизирани уеб сайтове. UI/UX дизайн и персонализирани решения от Yordanow.">
+    <meta name="keywords" content="изработка на сайтове, разработка на уеб сайтове, web development, програмист, дизайн на сайтове, модерен уеб дизайн">
+    
+    <meta property="og:title" content="Yordanow Web Development">
+    <meta property="og:description" content="Превръщам идеите ви в работещи уеб решения.">
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/1490532721569828926/1493447666217127946/your-photo.jpg">
+    <meta property="og:url" content="https://yordanow.site">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --red: #ff0000; --bg: #030303; --card: #0a0a0a; --brd: rgba(255,255,255,0.06); }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background: var(--bg); color: #fff; overflow-x: hidden; opacity: 0; transition: opacity 0.8s ease-out; }
+        body.loaded { opacity: 1; }
+
+        /* REVEAL ANIMATION */
+        .reveal { opacity: 0; transform: translateY(25px); transition: 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* LOADING BAR */
+        #refresh-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--red); width: 0; z-index: 9999; transition: 0.4s; }
+        
+        .fog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, rgba(255,0,0,0.03) 0%, transparent 70%); z-index: -1; pointer-events: none; }
+
+        /* HEADER */
+        header { padding: 20px 8%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--brd); position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 100; }
+        .logo { font-weight: 800; font-size: 18px; letter-spacing: 1px; }
+        .logo span { color: var(--red); }
+        
+        .lang-switch { display: flex; gap: 15px; border-left: 1px solid var(--brd); padding-left: 15px; align-items: center; }
+        .lang-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; filter: grayscale(100%); opacity: 0.4; transition: 0.3s; }
+        .lang-btn.active { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+        .flag-icon { width: 20px; height: 20px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* HERO */
+        .hero { padding: 100px 8% 50px; }
+        .hero h1 { font-size: clamp(38px, 10vw, 80px); font-weight: 800; line-height: 0.95; letter-spacing: -3px; }
+        .hero h1 span { color: var(--red); }
+        .hero p { color: #666; font-size: 17px; margin-top: 25px; max-width: 550px; line-height: 1.6; }
+
+        .section-label { padding: 60px 8% 30px; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; display: flex; align-items: center; gap: 15px; }
+        .section-label::before { content: ''; width: 30px; height: 2px; background: var(--red); }
+
+        /* GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 0 8% 100px; }
+        .card { background: var(--card); border: 1px solid var(--brd); padding: 70px 40px; border-radius: 25px; text-decoration: none; color: inherit; position: relative; overflow: hidden; transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); transform-style: preserve-3d; }
+        
+        /* SWIPE EFFECT */
+        .card::after { content: ''; position: absolute; top: -150%; left: -150%; width: 300%; height: 300%; background: linear-gradient(135deg, transparent 45%, rgba(255,0,0,0.08) 50%, transparent 55%); pointer-events: none; }
+        .card:hover::after { animation: swipe 1.2s ease-in-out forwards; }
+        @keyframes swipe { 0% { top: -150%; left: -150%; } 100% { top: 100%; left: 100%; } }
+
+        .card h3 { font-size: 28px; font-weight: 800; transition: 0.3s; }
+        .card:hover h3 { color: var(--red); }
+        .card .btn-icon { font-size: 11px; font-weight: 800; color: #333; text-transform: uppercase; margin-top: 15px; letter-spacing: 2px; }
+
+        /* WIDE SECTION */
+        .service-wide { margin: 0 8% 100px; padding: 60px 40px; background: #0a0a0a; border: 1px solid var(--brd); border-radius: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; }
+        .service-wide h2 { font-size: clamp(28px, 5vw, 42px); font-weight: 800; }
+        .cta-btn { background: #fff; color: #000; padding: 22px 45px; border-radius: 12px; text-decoration: none; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        .cta-btn:hover { background: var(--red); color: #fff; transform: translateY(-5px); }
+
+        /* FORM */
+        .contact { padding: 100px 8%; background: #020202; border-top: 1px solid var(--brd); }
+        .form-box { max-width: 600px; margin: 0 auto; }
+        form { display: grid; gap: 15px; }
+        input, textarea { width: 100%; background: #000; border: 1px solid var(--brd); padding: 20px; color: #fff; border-radius: 12px; outline: none; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--red); }
+        .submit { background: #fff; color: #000; border: none; padding: 22px; border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .submit:hover { background: var(--red); color: #fff; }
+
+        /* TOAST */
+        #toast { position: fixed; bottom: 30px; right: 30px; background: #fff; color: #000; padding: 20px 35px; border-radius: 15px; font-weight: 800; text-transform: uppercase; font-size: 12px; transform: translateY(200%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; }
+        #toast.show { transform: translateY(0); }
+
+        footer { padding: 40px 8%; text-align: center; color: #222; font-size: 10px; font-weight: 800; letter-spacing: 5px; }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            header { padding: 15px 5%; }
+            .hero { padding: 80px 5% 40px; }
+            .grid { padding: 0 5% 60px; }
+            .service-wide { margin: 0 5% 60px; text-align: center; }
+            .cta-btn { width: 100%; }
+            #toast { left: 5%; right: 5%; bottom: 20px; width: 90%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="refresh-bar"></div>
+<div id="toast"><span id="toast-msg"></span></div>
+<div class="fog"></div>
+
+<header class="reveal">
+    <div class="logo">YORDANOW<span>.SITE</span></div>
+    <nav>
+        <div class="lang-switch">
+            <div class="lang-btn active" onclick="setLang('bg')" id="btn-bg">
+                <div class="flag-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Bulgaria.svg');"></div>
+                <span>BG</span>
+            </div>
+            <div class="lang-btn" onclick="setLang('en')" id="btn-en">
+                <div class="flag-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');"></div>
+                <span>EN</span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<section class="hero reveal">
+    <h1 data-i18n="hero_title">Web Design &<br><span>Development.</span></h1>
+    <p data-i18n="hero_desc">Изработка на бързи, адаптивни и интерактивни уеб сайтове с фокус върху съвременния дизайн.</p>
+</section>
+
+<div id="work" class="section-label reveal" data-i18n="label_projects">Live Проекти</div>
+
+<div class="grid reveal">
+    <a href="https://yordanowz.com" target="_blank" class="card">
+        <h3>Yordanowz Hub</h3>
+        <div class="btn-icon" data-i18n="card_btn">Виж проекта ➔</div>
+    </a>
+    <a href="https://enforcebg.eu" target="_blank" class="card">
+        <h3>Enforce BG Maps</h3>
+        <div class="btn-icon" data-i18n="card_btn">Виж проекта ➔</div>
+    </a>
+    <a href="https://yordanow.online" target="_blank" class="card">
+        <h3>Calculator Hub</h3>
+        <div class="btn-icon" data-i18n="card_btn">Виж проекта ➔</div>
+    </a>
+</div>
+
+<div class="service-wide reveal">
+    <h2 data-i18n="wide_title">Custom Web Solution</h2>
+    <a href="#contact" class="cta-btn" data-i18n="wide_btn">Започни проект</a>
+</div>
+
+<section id="contact" class="contact reveal">
+    <div class="form-box">
+        <form id="orderForm" novalidate>
+            <input type="text" id="name" placeholder="Вашето Име" data-placeholder="name">
+            <input type="email" id="email" placeholder="Email Адрес" data-placeholder="email">
+            <input type="tel" id="phone" placeholder="Телефон" data-placeholder="phone">
+            <textarea id="msg" rows="4" placeholder="Информация за проекта..." data-placeholder="msg"></textarea>
+            <button type="submit" class="submit" data-i18n="form_submit">Изпрати Запитване</button>
+        </form>
+    </div>
+</section>
+
+<footer class="reveal">YORDANOW.SITE // 2026</footer>
+
+<script>
+    // ИНИЦИАЛИЗАЦИЯ И АНИМАЦИЯ ПРИ ЗАРЕЖДАНЕ
+    window.addEventListener('DOMContentLoaded', () => {
+        const bar = document.getElementById('refresh-bar');
+        bar.style.width = '100%';
+        setTimeout(() => {
+            document.body.classList.add('loaded');
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                setTimeout(() => el.classList.add('active'), i * 150);
+            });
+            bar.style.opacity = '0';
+        }, 500);
+    });
+
+    const i18n = {
+        bg: {
+            hero_title: "Web Design &<br><span>Development.</span>",
+            hero_desc: "Изработка на бързи, адаптивни и интерактивни уеб сайтове с фокус върху съвременния дизайн.",
+            label_projects: "Live Проекти", card_btn: "Виж проекта ➔",
+            wide_title: "Custom Web Solution", wide_btn: "Започни проект",
+            form_submit: "Изпрати Запитване",
+            name: "Вашето Име", email: "Email Адрес", phone: "Телефон", msg: "Информация за проекта...",
+            sent: "Успешно изпратено!", error: "Попълнете всички полета!"
+        },
+        en: {
+            hero_title: "Web Design &<br><span>Development.</span>",
+            hero_desc: "Creating fast, adaptive, and interactive websites with a focus on modern design.",
+            label_projects: "Live Projects", card_btn: "View Project ➔",
+            wide_title: "Custom Web Solution", wide_btn: "Start Project",
+            form_submit: "Send Inquiry",
+            name: "Your Name", email: "Email Address", phone: "Phone Number", msg: "Project details...",
+            sent: "Sent successfully!", error: "Please fill all fields!"
+        }
+    };
+
+    let currentLang = 'bg';
+
+    function setLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = i18n[lang][el.getAttribute('data-i18n')]);
+        document.querySelectorAll('[data-placeholder]').forEach(el => el.placeholder = i18n[lang][el.getAttribute('data-placeholder')]);
+        document.getElementById('btn-bg').classList.toggle('active', lang === 'bg');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    }
+
+    function showNotify(msg, isError = false) {
+        const t = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = msg;
+        t.classList.add('show');
+        t.style.borderLeft = isError ? "5px solid red" : "5px solid #00ff00";
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // DISCORD WEBHOOK ЛОГИКА
+    const form = document.getElementById('orderForm');
+    const myUserID = '884056221525630987'; 
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('.submit');
+        const orderID = "WEB-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        
+        btn.innerText = "ИЗПРАЩАНЕ...";
+        
+        const payload = {
+            content: `<@${myUserID}>`, // ТАГВА ТЕБ В DISCORD
+            embeds: [{
+                title: "🚀 НОВО ЗАПИТВАНЕ ЗА САЙТ " + orderID,
+                color: 16711680,
+                thumbnail: { url: "https://cdn.discordapp.com/attachments/1490532721569828926/1493447666217127946/your-photo.jpg" },
+                fields: [
+                    { name: "👤 Клиент", value: document.getElementById('name').value, inline: true },
+                    { name: "📞 Телефон", value: document.getElementById('phone').value, inline: true },
+                    { name: "📧 Email", value: document.getElementById('email').value, inline: false },
+                    { name: "💬 Информация", value: document.getElementById('msg').value }
+                ],
+                footer: { text: "YORDANOW WEB DEV" },
+                timestamp: new Date()
+            }]
+        };
+
+        try {
+            await fetch("https://discord.com/api/webhooks/1493420454998835270/WSTbv1d65WDWbmPYv0TeoUXSFaby3kgmB_fD2vEesB2ZJL7BpSSxeMDD3DS7K8kcIlXL", {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            });
+            showNotify(i18n[currentLang].sent);
+            form.reset();
+        } catch {
+            showNotify("Грешка при изпращане!", true);
+        } finally {
+            btn.innerText = i18n[currentLang].form_submit;
+        }
+    };
+
+    // TILT ЕФЕКТ ЗА КАРТИТЕ
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            card.style.transform = `perspective(1000px) rotateX(${y * -10}deg) rotateY(${x * 10}deg)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+        });
+    });
+</script>
+
+</body>
+</html>

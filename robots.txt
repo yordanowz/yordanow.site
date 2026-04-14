@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yordanow.site/sitemap.xml
